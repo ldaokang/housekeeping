@@ -1,0 +1,23 @@
+#accesses the directory "CloudAssets" and removes it from existence
+#for safety's sake, I've MOVED it instead of deleting it wholesale, to a storage facility on the desktop.
+if [ -d /run/user/1000/gvfs/afc:host=*/CloudAssets ]; then
+	cd /run/user/1000/gvfs/afc:host=*/CloudAssets
+	ls -alF
+	printf "Total size of directory: \n"
+#du displays all the files in CloudAssets
+	du -h /run/user/1000/gvfs/afc:host=*/CloudAssets
+	printf "Remove for sure? \n"
+#prompts a reply from user to double-confirm deletion
+	read -p "Continue (y/n)?" choice
+	case "$choice" in
+	y|Y )
+		cd ~/Desktop/CloudAssetsArchive
+#makes a directory in the archive in the format: YYYY-MM-DD-CloudAsset/
+		mkdir $(date -I)-CloudAsset
+#and stores all the iPhone CloudAssets in that archive folder...
+		mv /run/user/1000/gvfs/afc:host=*/CloudAssets/* ~/Desktop/CloudAssetsArchive/$(date -I)-CloudAsset
+		;; 
+	n|N ) echo "no";;
+	* ) echo "invalid";;
+	esac
+fi 
